@@ -158856,12 +158856,17 @@ var User =
 /** @class */
 function () {
   function User() {
+    this.color = "red";
     this.name = faker.name.findName();
     this.location = {
       lat: parseFloat(faker.address.latitude()),
       lng: parseFloat(faker.address.longitude())
     };
   }
+
+  User.prototype.markerContent = function () {
+    return "User Name: ".concat(this.name);
+  };
 
   return User;
 }();
@@ -158915,6 +158920,7 @@ var Company =
 /** @class */
 function () {
   function Company() {
+    this.color = "red";
     this.companyName = faker.company.companyName();
     this.catchPhrase = faker.company.catchPhrase();
     this.location = {
@@ -158922,6 +158928,10 @@ function () {
       lng: parseFloat(faker.address.longitude())
     };
   }
+
+  Company.prototype.markerContent = function () {
+    return "\n      <div>\n        <h1> Company Name: ".concat(this.companyName, " </h1>\n        <h3>Catchphrase: ").concat(this.catchPhrase, " </h3>\n      </div>\n    ");
+  };
 
   return Company;
 }();
@@ -158949,12 +158959,20 @@ function () {
   }
 
   CustomMap.prototype.addMarker = function (mappable) {
-    new google.maps.Marker({
+    var _this = this;
+
+    var marker = new google.maps.Marker({
       map: this.googleMap,
       position: {
         lat: mappable.location.lat,
         lng: mappable.location.lng
       }
+    });
+    marker.addListener("click", function () {
+      var infoWindow = new google.maps.InfoWindow({
+        content: mappable.markerContent()
+      });
+      infoWindow.open(_this.googleMap, marker);
     });
   };
 
