@@ -1,14 +1,15 @@
+import { Sorter } from "./Sorter";
 class Node {
   next: Node | null = null;
   constructor(public data: number) {}
 }
 
-export class LinkedList {
+export class LinkedList extends Sorter {
   head: Node | null = null;
 
   add(data: number): void {
     const node = new Node(data);
-
+    // console.log("->", data);
     if (!this.head) {
       this.head = node;
       return;
@@ -18,6 +19,8 @@ export class LinkedList {
     while (tail.next) {
       tail = tail.next;
     }
+
+    tail.next = node;
   }
 
   get length(): number {
@@ -68,7 +71,7 @@ export class LinkedList {
 
     const leftHand = leftNode.data;
     leftNode.data = rightNode.data;
-    leftNode.data = leftHand;
+    rightNode.data = leftHand;
   }
 
   print(): void {
